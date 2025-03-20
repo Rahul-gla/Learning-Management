@@ -11,27 +11,138 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Key, Loader2 } from "lucide-react";
+import {Loader2 } from "lucide-react";
 // import { Dialog } from "@radix-ui/react-dialog";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Course from "./Course";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import { useLoadUserQuery, useUpdateUserMutation } from "@/features/api/authApi";
+import { toast } from "sonner";
 
 const Profile = () => {
 
-  const {data,isLoading}=useLoadUserQuery();
-  console.log(data);
 
 
-  // const isLoading = false;
-  const enrolledcouses = [1, 2, 3, 4];
+
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const { data, isLoading } = useLoadUserQuery();
+  const [updateUser , { isLoading: updateUserIsLoading, isError, error, isSuccess }] = useUpdateUserMutation();
+
+  const onChangeHandler = (e) => {
+    const file = e.target.files?.[0];
+    if (file) setProfilePhoto(file);
+  };
+
+  const updateUserHandler = async () => {
+    const formData = new FormData();
+
+    try{
+
+    
+    formData.append("name", name);
+    formData.append("profilePhoto", profilePhoto);
+     const responce= await updateUser(formData);
+     console.log(responce);
+    }
+    catch(error){
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Profile updated successfully");
+    }
+    if (isError) {
+      toast.error(error.message || "Failed to update profile");
+    }
+  }, [isSuccess, isError, error]);
+
+  if (isLoading) return <h1>Profile Loading..</h1>;
+
+  const { user } = data;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // const [name,setName]=useState("");
+  // const[profilePhoto,setProfilePhoto]=useState("");
+  // const onChangeHandler=(e)=>{
+  //   const file=e.target.files?.[0];
+  //   if(file) setProfilePhoto(file);
+  // }
+
+
+  // const {data,isLoading}=useLoadUserQuery();
+  // // console.log(data);
+
+  // const[updateUser,{data:updateUserData,isLoading:updateUserIsLoading,isError,error,isSuccess}] = useUpdateUserMutation();
+
+
+  // if(isLoading) return <h1>Profile Loading..</h1>
+  // console.log(data);
+
+
+
+  // // const isLoading = false;
+  // // const enrolledcouses = [1, 2, 3, 4];
+
+  // const{user}=data;
+
+
+  // const updateUserHandler= async()=>{
+  //   // console.log(name,profilePhoto)
+
+
+  //   const formData=new FormData();
+  //   formData.append("name",name);
+  //   formData.append("profilePhot",profilePhoto)
+  //   await updateUser(formData);
+
+
+  // }
+
+  // useEffect(()=>{
+  //   if(isSuccess){
+  //     toast.success(data.message||"profile Updated")
+  //   }
+  //   if(isError){
+  //     toast.success(error.message||"failed to update profile")
+  //   }
+
+  // },[error,isSuccess,isError])
   return (
     <div className="my-20 max-w-4xl mx-auto px-4 ">
       <h1 className="font-bold text-2xl text-center md:text-left">Profile</h1>
       <div className="flex flex-col md:flex-row items-center md:items-startgap-8 my-5">
         <div className="flex flex-col items-center">
           <Avatar className="h-20 w-20 md:h-32 md:w-32 mb-4">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src={user.photoUrl|| "https://github.com/shadcn.png"} alt="@shadcn" />
             <AvatarFallback className="w-full h-full flex items-center justify-center rounded-full">
               CN
             </AvatarFallback>
@@ -43,7 +154,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100 ml-2">
               Name:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                Rahul Mern Stack
+                {user.name}
               </span>
             </h1>
           </div>
@@ -52,7 +163,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100 ml-2">
               Email:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                rkx639849@gmail.com
+                {user.email}
               </span>
             </h1>
           </div>
@@ -61,7 +172,7 @@ const Profile = () => {
             <h1 className="font-semibold text-gray-900 dark:text-gray-100 ml-2">
               Role:
               <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">
-                Instructor
+                {user.role.toUpperCase()}
               </span>
             </h1>
           </div>
@@ -82,16 +193,20 @@ const Profile = () => {
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Name</Label>
-                  <Input type="text" placehoder="name" className="col-span-3" />
+                  <Input type="text" 
+                  value={name}
+                  onChange={(e)=>setName(e.target.value)}
+                  
+                  placeholder="name" className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Profile Photo</Label>
-                  <Input type="file" accept="image/*" className="col-span-3" />
+                  <Input onChange={onChangeHandler} type="file" accept="image/*" className="col-span-3" />
                 </div>
               </div>
 
               <DialogFooter>
-                <Button disabled={isLoading}>
+                <Button disabled={isLoading} onClick={updateUserHandler}>
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -110,10 +225,10 @@ const Profile = () => {
       <div>
         <h1 className="font-medium text-lg">Courses You Are Enrolled in</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
-          {enrolledcouses.length === 0 ? (
+          {user.enrolledCourses.length === 0 ? (
             <h1>You Have Not Enroll yet</h1>
           ) : (
-            enrolledcouses.map((course, index) => <Course Key={index} />)
+            user.enrolledCourses.map((course) => <Course course={course} key={course._id} />)
           )}
         </div>
       </div>

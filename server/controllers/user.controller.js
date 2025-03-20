@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import bycrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
 import req from "express/lib/request.js";
+import { deletMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -136,3 +137,114 @@ export const getUserProfile=async(req,res)=>{
 
 
 }
+
+
+// export const updateProfile=async(req,res)=>{
+
+
+//   try{
+
+//     const userId=req.id;
+//     const {name}=req.body;
+//     const profilePhoto=req.file.path;
+
+//     const user=await User.findById(userId);
+
+//     if(!user){
+//       return res.status(404).json({
+//         message:"User NOt Found",
+//         success:false
+//       })
+
+//     }
+
+//     // extract the public id of old image from the url is it exists
+//     if(user.photoUrl){
+//       const publicId=user.photoUrl.split("/").pop().split(".")[0];
+//       deletMediaFromCloudinary(publicId);
+//     }
+//     // upload new photo
+
+//     const cloudResponse=await uploadMedia(profilePhoto.path);
+//     const photoUrl=cloudResponse.secure_url;
+
+//     const updatedData={name,photoUrl}
+
+//     const updatesUser=await User.findByIdAndUpdate(userId,updatedData,{
+//       new:true
+//     }).select("-password");
+
+//     return res.status(200).json({
+//       success:true,
+//       user:updatesUser,
+//       message:"profile updated succesfully "
+//     })
+
+//   }
+//   catch (error) {
+//     console.log(error);
+
+//     return res.status(500).json({
+//       success: false,
+//       message: "failed to update profile",
+//     });
+//   }
+
+// }
+
+
+
+export const updateProfile = async (req, res) => {
+  try {
+      const userId = req.id;
+      const { name } = req.body;
+
+      // Check if the file was uploaded
+      if (!req.file) {
+          return res.status(400).json({
+              success: false,
+              message: 'No file uploaded',
+          });
+      }
+
+      const profilePhotoPath = req.file.path; // Now it's safe to access path
+
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({
+              message: "User  Not Found",
+              success: false
+          });
+      }
+
+      // Extract the public id of the old image from the URL if it exists
+      if (user.photoUrl) {
+          const publicId = user.photoUrl.split("/").pop().split(".")[0];
+          await deletMediaFromCloudinary(publicId);
+      }
+
+      // Upload new photo
+      const cloudResponse = await uploadMedia(profilePhotoPath);
+      const photoUrl = cloudResponse.secure_url;
+
+      const updatedData = { name, photoUrl };
+
+      const updatedUser  = await User.findByIdAndUpdate(userId, updatedData, {
+          new: true
+      }).select("-password");
+
+      return res.status(200).json({
+          success: true,
+          user: updatedUser ,
+          message: "Profile updated successfully"
+      });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+          success: false,
+          message: "Failed to update profile",
+      });
+  }
+};
+
+

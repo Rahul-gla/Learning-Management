@@ -11,11 +11,11 @@ const HeroSection=()=> {
                 <input
                 type='text'
                 placeholder='Search Courses'
-                className='flex-grow   border-none focus-visible:right-0 px-6 py-3  dark:text-gray-100 placeholder-gray-500'
+                className='flex-grow  border-none focus-visible:right-0 px-5 py-3  dark:text-gray-100 placeholder-gray-500'
                 
                 />
 
-                <Button className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-3 rounded-r-full hover:bg-blue-700 ">Search</Button>
+                <Button className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-6 rounded-r-full hover:bg-blue-700 ">Search</Button>
 
             </form>
             <Button className="bg-white dark:bg-gray-800 text-blue-600  rounded-full hover:bg-gray-200">Explore Courses</Button>
