@@ -25,16 +25,12 @@ const Course = () => {
 
         <div className="flex items-center gap-3">
         <Avatar >
-                  {" "}
-                  {/* Add border color if needed */}
                   <AvatarImage
                     className="w-13 h-13  rounded-full mt-1" // Ensure the image covers the avatar and is circular
                     src="https://github.com/shadcn.png"
                     alt="@shadcn"
                   />
                   <AvatarFallback className="w-full h-full flex items-center justify-center rounded-full">
-                    {" "}
-                    {/* Ensure fallback is also circular */}
                     CN
                   </AvatarFallback>
                 </Avatar>
