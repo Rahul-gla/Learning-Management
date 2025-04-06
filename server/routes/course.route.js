@@ -1,0 +1,35 @@
+// import express from "express";
+// import {getUserProfile, login, logout, register, updateProfile } from "../controllers/user.controller.js";
+// import isAuthenticated from "../middlewares/isAuthenticated.js";
+// import upload from "../utils/multer.js";
+
+// const router=express.Router();
+
+
+// router.route("/register").post(register)
+
+// router.route("/login").post(login);
+// router.route("/logout").get(logout)
+// router.route("/profile").get(isAuthenticated, getUserProfile);
+// router.route("/profile/update").put(isAuthenticated, upload.single("profilePhoto"), updateProfile);
+
+
+
+
+// export default router;
+
+
+
+
+
+import express from "express";
+import isAuthenticated from "../middlewares/isAuthenticated.js"; // Fixed typo
+import { createCourse } from "../controllers/course.controller.js";
+
+const router = express.Router();
+
+router.route("/").post( isAuthenticated,createCourse)
+
+
+export default router;
+

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { register } from "module"
-import { userLoggedIn } from "../authSlice";
+import { userLoggedIn, userLoggedOut } from "../authSlice";
 // import { url } from "inspector";
 // import { use } from "react"
 
@@ -43,7 +43,17 @@ export const authApi = createApi({
       query:()=>({
         url:"logout",
         method:"GET",
-      })
+      }),
+      //    ....................
+
+      async onQueryStarted(_, { queryFulfilled, dispatch }) {
+        try {
+
+          dispatch(userLoggedOut());
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
 
     loadUser: builder.query({

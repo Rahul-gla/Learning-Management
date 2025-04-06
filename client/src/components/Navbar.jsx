@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { School, Store} from "lucide-react";
+import { School, Store } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -15,35 +15,32 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import DarkMode from "@/DarkMode";
 import MobileNavbar from "@/MobileNavbar";
 import { Link, useNavigate } from "react-router-dom";
-import { useLoginUserMutation, useLogoutUserMutation } from "@/features/api/authApi";
+import {
+  useLoginUserMutation,
+  useLogoutUserMutation,
+} from "@/features/api/authApi";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 // import { Input } from "./ui/input";
 
-
 const Navbar = () => {
-
   // const user = true;
 
-  const {user}=useSelector(store=>store.auth)
+  const { user } = useSelector((store) => store.auth);
 
-  const [logoutUser,{data,isSuccess}]=useLogoutUserMutation();
-  const navigate=useNavigate();
+  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+  const navigate = useNavigate();
 
-
-  useEffect(()=>{
-    if(isSuccess){
-      toast.success(data.message||"LogOut Successfully")
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "LogOut Successfully");
       navigate("/login");
     }
+  }, [isSuccess]);
 
-  },[isSuccess])
-
-
-  const logoutHandler=async()=>{
+  const logoutHandler = async () => {
     await logoutUser();
-
-  }
+  };
 
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-ray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
@@ -75,7 +72,7 @@ const Navbar = () => {
                   {/* Add border color if needed */}
                   <AvatarImage
                     className="w-13 h-13  rounded-full mt-1" // Ensure the image covers the avatar and is circular
-                    src={user?.photoUrl||"https://github.com/shadcn.png"}
+                    src={user?.photoUrl || "https://github.com/shadcn.png"}
                     alt="@shadcn"
                   />
                   <AvatarFallback className="w-full h-full flex items-center justify-center rounded-full">
@@ -89,20 +86,32 @@ const Navbar = () => {
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuGroup>
-                  <DropdownMenuItem><Link to="my-learning">My Learning</Link></DropdownMenuItem>
-                  <DropdownMenuItem><Link to="profile">Edit Profile</Link></DropdownMenuItem>
-                  <DropdownMenuItem onClick={logoutHandler}>Log out</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="my-learning">My Learning</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="profile">Edit Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={logoutHandler}>
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
 
-                <DropdownMenuSeparator />
+                {user.role === "instructor" && (
+                  <>
+                    <DropdownMenuSeparator />
 
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="outline">Login</Button>
-              <Button>SignUp</Button>
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button onClick={() => navigate("/login")}>SignUp</Button>
             </div>
           )}
 
@@ -110,22 +119,14 @@ const Navbar = () => {
         </div>
       </div>
 
-
       {/* mobile device */}
-
 
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold">E-Learning</h1>
-      <MobileNavbar/>
-
+        <MobileNavbar />
       </div>
     </div>
   );
 };
 
 export default Navbar;
-
-
-
-
-

@@ -60,6 +60,10 @@ const Profile = () => {
 
     await updateUser(formData);
   };
+  useEffect(()=>{
+    refetch();
+
+  },[])
 
   useEffect(() => {
     if (isSuccess) {
@@ -90,7 +94,7 @@ const Profile = () => {
           <Avatar className="h-24 w-24  md:h-32 md:w-32 mb-4">
             <AvatarImage
               // className="w-13 h-13  rounded-full mt-1" // Ensure the image covers the avatar and is circular
-              src={user.photoUrl || "https://github.com/shadcn.png"}
+              src={user?.photoUrl || "https://github.com/shadcn.png"}
               alt="@shadcn"
             />
             <AvatarFallback className="w-full h-full flex items-center justify-center rounded-full">
