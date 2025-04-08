@@ -6,7 +6,7 @@ const Sidebar = () => {
   return (
     <div className="flex">
 
-    <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r-gray-300 dark:border-gray-700 bg=[#f0f0] p-5 top-0 h-screen">
+    <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-r-gray-300 dark:border-gray-700 bg=[#f0f0] p-5 sticky top-0 h-screen">
       <div className="space-y-4 mt-20">
         <Link  to="/admin/dashboard" className="flex items-center gap-2">
           <ChartNoAxesColumn size={22} />
