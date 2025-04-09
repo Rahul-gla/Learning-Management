@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken.js";
-import req from "express/lib/request.js";
+// import req from "express/lib/request.js";
 import { deletMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 export const register = async (req, res) => {
   try {

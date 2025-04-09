@@ -18,9 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
+} from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const CourseTab = () => {
   const [input, setInput] = useState({
@@ -30,54 +35,94 @@ const CourseTab = () => {
     category: "",
     courseLevel: "",
     coursePrice: "",
-    couseThumbnail: "",
+    courseThumbnail: "",
   });
 
+  const params = useParams();
+  // courseId
 
-  const [previewThumbnail,setPreviewThumbnail]=useState("");
+  const courseId = params.courseId;
 
-  const navigate=useNavigate();
+  const { data: courseByIdData, CourseByIdIsLoading } = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true});
+
+  useEffect(() => {
+    if (courseByIdData?.course) {
+      const course =courseByIdData?.course 
+
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      });
+    }
+  }, [courseByIdData]);
+
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
+
+  const navigate = useNavigate();
+
+  const [editCourse, { data, isLoading, isSuccess, error }] =
+    useEditCourseMutation();
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
   };
 
+  const selectCategory = (value) => {
+    setInput({ ...input, category: value });
+  };
 
-  const selectCategory=(value)=>{
-    setInput({...input,category:value})
-  }
+  const selectCourseLevel = (value) => {
+    setInput({ ...input, courseLevel: value });
+  };
 
-  const selectCourseLevel=(value)=>{
-    setInput({...input,courseLevel:value})
-  }
+  //   get file
 
-//   get file
+  const selectThumbnail = (e) => {
+    const file = e.target.files?.[0];
 
-const selectThumbnail=(e)=>{
-    const file=e.target.files?.[0];
+    if (file) {
+      setInput({ ...input, courseThumbnail: file });
+      const fileReader = new FileReader();
 
-    if(file){
-        setInput({...input,couseThumbnail:file})
-        const fileReader=new FileReader();
-
-        fileReader.onloadend=()=>setPreviewThumbnail(fileReader.result)
-        fileReader.readAsDataURL(file);
+      fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
+      fileReader.readAsDataURL(file);
     }
-}
+  };
 
-const updateCourseHandler=()=>{
+  const updateCourseHandler = async () => {
     console.log(input);
+    const formData = new FormData();
+    formData.append("courseTitle", input.courseTitle);
+    formData.append("subTitle", input.subTitle);
+    formData.append("description", input.description);
+    formData.append("category", input.category);
+    formData.append("courseLevel", input.courseLevel);
+    formData.append("coursePrice", input.coursePrice);
+    formData.append("courseThumbnail", input.courseThumbnail);
 
-}
+    await editCourse({ formData, courseId });
+  };
 
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Course Updated.");
+    }
+    if (error) {
+      toast.error(error?.data?.message || "Failed to update course");
+    }
+  }, [isSuccess, error]);
 
-
-
+  if(CourseByIdIsLoading) return<Loader2 className="h-4 w-4 animate-spin"/>
 
   const isPublished = false;
 
-  const isLoading=false;
+  // const isLoading=false;
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
@@ -128,7 +173,7 @@ const updateCourseHandler=()=>{
             <div>
               <Label>Category</Label>
 
-              <Select   onValueChange={selectCategory}>
+              <Select onValueChange={selectCategory}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a Category" />
                 </SelectTrigger>
@@ -156,76 +201,70 @@ const updateCourseHandler=()=>{
               </Select>
             </div>
 
-          <div >
-            <label>Course Label</label>
-            <Select onValueChange={selectCourseLevel}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Course Lebele" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Course Lebel</SelectLabel>
-                  <SelectItem value="Beginer">Beginer</SelectItem>
-                  <SelectItem value="Medium">Medium</SelectItem>
-                  <SelectItem value="Advance">Advance</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+            <div>
+              <label>Course Label</label>
+              <Select onValueChange={selectCourseLevel}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select Course Lebele" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Course Lebel</SelectLabel>
+                    <SelectItem value="Beginer">Beginer</SelectItem>
+                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="Advance">Advance</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div>
-            <Label>
-                Price in (INR)
-            </Label>
-            <Input
-            type="number"
-            name="coursePrice"
-            value={input.coursePrice}
-            onChange={changeEventHandler}
-            placeholder="199"
-            className='w-fit'
-            />
+            <div>
+              <Label>Price in (INR)</Label>
+              <Input
+                type="number"
+                name="coursePrice"
+                value={input.coursePrice}
+                onChange={changeEventHandler}
+                placeholder="199"
+                className="w-fit"
+              />
+            </div>
           </div>
-          </div>
-
-
 
           <div>
             <Label>Course Thumbnail</Label>
-            <Input 
-            type='file'
-            onChange={selectThumbnail}
-
-            accept="image/*"
-            className="w-fit"
-            
+            <Input
+              type="file"
+              onChange={selectThumbnail}
+              accept="image/*"
+              className="w-fit"
             />
 
-            {
-                previewThumbnail&&(
-                    <img src={previewThumbnail} className="w-64 my-2" alt="Course Thumbnail"/>
-                )
-            }
-
+            {previewThumbnail && (
+              <img
+                src={previewThumbnail}
+                className="w-64 my-2"
+                alt="Course Thumbnail"
+              />
+            )}
           </div>
 
           <div>
-            <Button onClick={()=>navigate("/admin/course")} variant='outline'>Cancel</Button>
+            <Button onClick={() => navigate("/admin/course")} variant="outline">
+              Cancel
+            </Button>
 
-            <Button disabaled={isLoading} onClick={updateCourseHandler}>
-                {
-                    isLoading?(
-                        <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                        Please Wiat
-                        
-                        </>
-                    ):"save"
-                }
-
+            <Button disabled={isLoading} onClick={updateCourseHandler}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please Wiat
+                </>
+              ) : (
+                "save"
+              )}
             </Button>
           </div>
-
         </div>
       </CardContent>
     </Card>
