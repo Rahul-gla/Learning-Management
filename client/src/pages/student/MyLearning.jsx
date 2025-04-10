@@ -3,7 +3,7 @@ import Course from "./Course";
 
 const MyLearning = () => {
   const isLoading = false;
-  const mylearningcourses = [1, 2, 3];
+  const mylearningcourses = [];
   return (
     <div className="max-w-4xl mx-auto my-20 px-4 md:px-0">
       <h1 className="font-bold text-2xl">My Learning</h1>
@@ -17,7 +17,7 @@ const MyLearning = () => {
             {
 
             
-                      [1,2].map((course,index)=><Course key={index} />)
+                      [1,2].map((course,index)=><Course key={index} course={course} />)
             }
             </div>
         )}

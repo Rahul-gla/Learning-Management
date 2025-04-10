@@ -21,8 +21,10 @@ import {
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
+  usePublishCourseMutation,
 } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
+import { Query } from "mongoose";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -43,7 +45,10 @@ const CourseTab = () => {
 
   const courseId = params.courseId;
 
-  const { data: courseByIdData, CourseByIdIsLoading } = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true});
+  const { data: courseByIdData,isLoading: CourseByIdIsLoading,refetch } = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true});
+
+  const [publishCourse]=usePublishCourseMutation();
+
 
   useEffect(() => {
     if (courseByIdData?.course) {
@@ -109,6 +114,26 @@ const CourseTab = () => {
     await editCourse({ formData, courseId });
   };
 
+
+  const publishStatusHandler=async(action)=>{
+    try{
+
+  const response =await publishCourse({courseId,query:action})
+
+  if(response.data){
+    refetch()
+    toast.success(response.data.message)
+  }
+
+    }
+    catch(error){
+      // console.log(error);
+      toast.error("failed to publish or unpublish course")
+
+    }
+
+  }
+
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message || "Course Updated.");
@@ -120,7 +145,6 @@ const CourseTab = () => {
 
   if(CourseByIdIsLoading) return<Loader2 className="h-4 w-4 animate-spin"/>
 
-  const isPublished = false;
 
   // const isLoading=false;
   return (
@@ -133,8 +157,8 @@ const CourseTab = () => {
           </CardDescription>
         </div>
         <div className="space-x-2">
-          <Button variant="outline">
-            {isPublished ? "Unpublished" : "Published"}
+          <Button disabled={courseByIdData?.course.lectures.length==0} variant="outline" onClick={()=>publishStatusHandler(courseByIdData?.course.isPublish?"false":"true")}>
+            {courseByIdData?.course.isPublish ? "Unpublished" : "Published"}
           </Button>
 
           <Button>Remove Course</Button>

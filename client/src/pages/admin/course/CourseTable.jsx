@@ -90,7 +90,7 @@ const CourseTable = () => {
               <TableCell>
                 <Badge>
                 
-                {course.isPublished?"Published":"Draft"} </Badge></TableCell>
+                {course.isPublish?"Published":"Draft"} </Badge></TableCell>
               <TableCell>{course.courseTitle}</TableCell>
               <TableCell className="text-right">
 
