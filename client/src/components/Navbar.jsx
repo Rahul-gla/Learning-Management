@@ -102,7 +102,7 @@ const Navbar = () => {
       </div>
       {/* Mobile device */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
-        <h1 className="font-extrabold text-2xl">E-learning</h1>
+        <h1 className="font-extrabold text-2xl"><Link to="/">E-learning</Link></h1>
         <MobileNavbar user={user} logoutHandler={logoutHandler} />
       </div>
     </div>
@@ -127,6 +127,7 @@ const MobileNavbar = ({ user, logoutHandler }) => {
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
           <SheetTitle className="font-extrabold text-2xl">
             <Link to="/">E-Learning</Link>
+            {/* <Link to="/" onClick={() => navigate("/")}>E-Learning</Link> */}
           </SheetTitle>
         </SheetHeader>
         <Separator className="mr-2" />

@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  useDeleteCourseMutation,
   useEditCourseMutation,
   useGetCourseByIdQuery,
   usePublishCourseMutation,
@@ -48,6 +49,7 @@ const CourseTab = () => {
   const { data: courseByIdData,isLoading: CourseByIdIsLoading,refetch } = useGetCourseByIdQuery(courseId,{refetchOnMountOrArgChange:true});
 
   const [publishCourse]=usePublishCourseMutation();
+  const[deleteCourse]=useDeleteCourseMutation();
 
 
   useEffect(() => {
@@ -76,6 +78,23 @@ const CourseTab = () => {
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
+  };
+
+  const removeCourseHandler = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+    if (confirmDelete) {
+      try {
+        const response = await deleteCourse(courseId).unwrap(); // Call the delete mutation
+        toast.success(response.message || "Course removed successfully.");
+        refetch()
+
+        navigate("/admin/course"); 
+        // Navigate back to the course list or another page
+
+      } catch (error) {
+        toast.error(error?.data?.message || "Failed to remove course.");
+      }
+    }
   };
 
   const selectCategory = (value) => {
@@ -161,7 +180,7 @@ const CourseTab = () => {
             {courseByIdData?.course.isPublish ? "Unpublished" : "Published"}
           </Button>
 
-          <Button>Remove Course</Button>
+          <Button onClick={removeCourseHandler}>Remove Course</Button>
         </div>
       </CardHeader>
       <CardContent>

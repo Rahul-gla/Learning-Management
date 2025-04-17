@@ -206,6 +206,40 @@ export const getCourseById = async (req, res) => {
   }
 };
 
+
+
+export const removeCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params; // Get the course ID from the request parameters
+
+    // Find the course by ID
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({
+        message: "Course Not Found",
+      });
+    }
+
+    // If the course has a thumbnail, delete it from Cloudinary
+    if (course.courseThumbnail) {
+      const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
+      await deletMediaFromCloudinary(publicId); // Assuming this function deletes media from Cloudinary
+    }
+
+    // Delete the course from the database
+    await Course.findByIdAndDelete(courseId);
+
+    return res.status(200).json({
+      message: "Course removed successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Failed to remove course",
+    });
+  }
+};
+
 //    for a creating a lecture
 
 export const createLecture = async (req, res) => {
