@@ -10,7 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useEditCourseMutation, useEditLectureMutation, useGetLectureByIdQuery, useRemoveLectureMutation } from "@/features/api/courseApi";
+import {
+  useEditCourseMutation,
+  useEditLectureMutation,
+  useGetLectureByIdQuery,
+  useRemoveLectureMutation,
+} from "@/features/api/courseApi";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -31,22 +36,24 @@ const LectureTab = () => {
   const params = useParams();
   const { courseId, lectureId } = params;
 
-  const{data:lectureData}=useGetLectureByIdQuery(lectureId);
-  const lecture=lectureData?.lecture;
+  const { data: lectureData } = useGetLectureByIdQuery(lectureId);
+  const lecture = lectureData?.lecture;
 
-  useEffect(()=>{
-    if(lecture){
+  useEffect(() => {
+    if (lecture) {
       setLectureTitle(lecture.lectureTitle);
-      setIsFree(lecture.isPreviewFree)
-      setUploadVideoInfo(lecture.videoInfo)
+      setIsFree(lecture.isPreviewFree);
+      setUploadVideoInfo(lecture.videoInfo);
     }
-
-  },[lecture])
+  }, [lecture]);
 
   const [editLecture, { data, isLoading, error, isSuccess }] =
     useEditLectureMutation();
 
-    const[removeLecture,{data:removeData,isLoading:removeLoading,isSuccess:removeIsSuccess}]=useRemoveLectureMutation();
+  const [
+    removeLecture,
+    { data: removeData, isLoading: removeLoading, isSuccess: removeIsSuccess },
+  ] = useRemoveLectureMutation();
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
@@ -80,10 +87,9 @@ const LectureTab = () => {
     }
   };
 
-
-  const removeLectureHandler=async()=>{
+  const removeLectureHandler = async () => {
     await removeLecture(lectureId);
-  }
+  };
 
   // const editLectureHandler = async () => {
   //   // alert('working');
@@ -102,36 +108,28 @@ const LectureTab = () => {
 
     await editLecture({
       lectureTitle,
-      videoInfo:uploadVideoInfo,
-      isPreviewFree:isFree,
+      videoInfo: uploadVideoInfo,
+      isPreviewFree: isFree,
       courseId,
       lectureId,
     });
   };
- 
 
-
-
-  useEffect(()=>{
-    if(isSuccess){
-      toast.success(data.message||"lecture Update")
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "lecture Update");
     }
 
-    if(error){
-      toast.error(error.data.message||"lecture is not Updated")
-
-
+    if (error) {
+      toast.error(error.data.message || "lecture is not Updated");
     }
+  }, [isSuccess, error]);
 
-  },[isSuccess,error])
-
-
-  useEffect(()=>{
-    if(removeIsSuccess){
-      toast.success(removeData.message)
+  useEffect(() => {
+    if (removeIsSuccess) {
+      toast.success(removeData.message);
     }
-
-  },[removeIsSuccess])
+  }, [removeIsSuccess]);
   return (
     <Card>
       <CardHeader className="flex justify-between">
@@ -143,24 +141,32 @@ const LectureTab = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button disbaled={removeLoading} variant="destructive" onClick={removeLectureHandler}>
-{
-  removeLoading?<>
-  <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-  Please Wait
-
-  
-  </>:"Remove Lecture"
-
-}            
-            </Button>
+          <Button
+            disbaled={removeLoading}
+            variant="destructive"
+            onClick={removeLectureHandler}
+          >
+            {removeLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please Wait
+              </>
+            ) : (
+              "Remove Lecture"
+            )}
+          </Button>
         </div>
       </CardHeader>
 
       <CardContent>
         <div>
           <Label>Title</Label>
-          <Input value={lectureTitle} onChange={(e)=>setLectureTitle(e.target.value)} type="text" placeholder="ex. Introduction to javaScript" />
+          <Input
+            value={lectureTitle}
+            onChange={(e) => setLectureTitle(e.target.value)}
+            type="text"
+            placeholder="ex. Introduction to javaScript"
+          />
         </div>
 
         <div className="my-5">
@@ -183,7 +189,11 @@ const LectureTab = () => {
         </div>
 
         <div className="flex  items-center space-x-2 my-5">
-          <Switch checked={isFree} onCheckedChange={setIsFree} id="airplane-mode" />
+          <Switch
+            checked={isFree}
+            onCheckedChange={setIsFree}
+            id="airplane-mode"
+          />
           <Label htmlFor="airplane-mode">Is This Video Free</Label>
         </div>
         {mediaProgress && (
@@ -191,23 +201,20 @@ const LectureTab = () => {
             {/* <Progress value={100} max={100} /> */}
             <Progress value={uploadProgress} />
 
-
             <p>{uploadProgress}% Upload</p>
           </div>
         )}
 
         <div className="mt-4">
           <Button disbaled={isLoading} onClick={editLectureHandler}>
-
-            {
-              isLoading
-              ?<>
-  <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-  Please Wait
-
-  
-  </>:"Update Lecture"
-            }
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please Wait
+              </>
+            ) : (
+              "Update Lecture"
+            )}
           </Button>
         </div>
       </CardContent>

@@ -21,8 +21,7 @@ import CourseProgress from "./pages/student/CourseProgress";
 import SearchPage from "./pages/student/SearchPage";
 import { AdminRoute, AuthenticatedUser, ProtectedRoute } from "./components/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/PurchaseCourseProtectedRoute";
-import { ThemeProvider } from "./components/ThemeProvider";
-// import { Sidebar } from "./pages/admin/Sidebar.jsx";
+
 
 const appRouter = createBrowserRouter([
   {
@@ -137,9 +136,7 @@ function App() {
   return (
     <>
       <main>
-        {/* <ThemeProvider> */}
         <RouterProvider router={appRouter}/>
-        {/* </ThemeProvider> */}
        
       </main>
     </>
