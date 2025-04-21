@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const Course = ({ course }) => {
   return (
-    <Link to={`course-detail/${course._id}`}>
+    <Link to={`/course-detail/${course._id}`}> {/* Ensure the leading slash is added */}
       <Card className="overflow-hidden rounded-lg bg-white shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
         <div className="relative">
           <img
@@ -24,12 +24,12 @@ const Course = ({ course }) => {
             <div className="flex items-center gap-3">
               <Avatar>
                 <AvatarImage
-                  className="w-13 h-13 rounded-full mt-1" // Ensure the image covers the avatar and is circular
-                  src={course.creator?.photoUrl || "https://github.com/shadcn.png"}
-                  alt="@shadcn"
+                  className="w-13 h-13 rounded-full mt-1"
+                  src={course.creator?.photoUrl || "https://via.placeholder.com/150"}
+                  alt={course.creator?.name || "Creator"}
                 />
                 <AvatarFallback className="w-full h-full flex items-center justify-center rounded-full">
-                  CN
+                  {course.creator?.name ? course.creator.name.charAt(0) : "CN"}
                 </AvatarFallback>
               </Avatar>
 
