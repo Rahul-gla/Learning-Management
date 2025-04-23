@@ -20,6 +20,11 @@ const Course = ({ course }) => {
           <h1 className="hover:underline font-bold text-lg truncate">
             {course.courseTitle}
           </h1>
+<div className="text-sm text-gray-600 line-clamp-2">
+  {course.subTitle}
+</div>
+
+
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar>

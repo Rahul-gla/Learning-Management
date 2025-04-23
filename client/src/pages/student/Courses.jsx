@@ -19,7 +19,9 @@ const Courses = () => {
             ))
           ) : (
             data?.courses && data.courses.map((course, index) => <Course key={index} course={course} />)
-          )}
+          )
+          
+          }
         </div>
       </div>
     </div>

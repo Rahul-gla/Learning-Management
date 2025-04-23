@@ -79,7 +79,7 @@ export const authApi = createApi({
         url: "profile/update",
         method: "PUT",
         body: formData,
-        credentials: "include",
+        // credentials: "include",
       }),
     }),
   }),

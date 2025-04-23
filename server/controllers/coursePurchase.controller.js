@@ -304,24 +304,83 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
 };
 
 // Get all purchased courses for a user
+// export const getAllPurchasedCourse = async (req, res) => {
+//   try {
+//     const userId = req.id; // Assuming user ID is available in the request
+//     const purchasedCourse = await CoursePurchase.find({
+//       userId,
+//       status: "completed", // Change to "pending" if needed
+//     }).populate("courseId");
+
+//     if (!purchasedCourse.length) {
+//       return res.status(404).json({
+//         purchasedCourse: [],
+//       });
+//     }
+//     return res.status(200).json({
+//       purchasedCourse,
+//     });
+//   } catch (error) {
+//     console.log("Error fetching purchased courses:", error);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
+
+// Get all purchased courses for a user (with full course + creator populated)
 export const getAllPurchasedCourse = async (req, res) => {
   try {
     const userId = req.id; // Assuming user ID is available in the request
+
     const purchasedCourse = await CoursePurchase.find({
       userId,
-      status: "completed", // Change to "pending" if needed
-    }).populate("courseId");
+      status: "completed",
+    }).populate({
+      path: "courseId",
+      populate: {
+        path: "creator",
+        select: "name photoUrl", // Select only what you need
+      },
+    });
 
     if (!purchasedCourse.length) {
       return res.status(404).json({
         purchasedCourse: [],
       });
     }
-    return res.status(200).json({
-      purchasedCourse,
-    });
+
+    // Option 1: Return the full CoursePurchase data with populated courseId + creator
+    // return res.status(200).json({ purchasedCourse });
+
+    // Option 2 (Recommended): Reshape response to just return array of courses
+    const courses = purchasedCourse
+      .filter((purchase) => purchase.courseId) // Ensure course still exists
+      .map((purchase) => purchase.courseId);
+
+    return res.status(200).json({ purchasedCourse: courses });
   } catch (error) {
     console.log("Error fetching purchased courses:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+
+
+// Get all purchased courses for all users
+export const getAllPurchasedCourses = async (req, res) => {
+  try {
+    const purchasedCourses = await CoursePurchase.find()
+      .populate("courseId")
+      .populate("userId"); // Assuming you want to populate user details as well
+
+    if (!purchasedCourses.length) {
+      return res.status(404).json({ message: "No purchased courses found." });
+    }
+
+    return res.status(200).json({ purchasedCourses });
+  } catch (error) {
+    console.log("Error fetching all purchased courses:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

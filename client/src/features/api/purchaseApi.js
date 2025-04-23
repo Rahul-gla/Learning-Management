@@ -28,6 +28,13 @@ export const purchaseApi = createApi({
         method: "GET",
       }),
     }),
+
+    getAllPurchasedCourses: builder.query({
+      query: () => ({
+        url: `/all`, // Use the new endpoint
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -35,4 +42,5 @@ export const {
   useCreateCheckoutSessionMutation,
   useGetCourseDetailWithStatusQuery,
   useGetPurchasedCoursesQuery,
+  useGetAllPurchasedCoursesQuery,
 } = purchaseApi;

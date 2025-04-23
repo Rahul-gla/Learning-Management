@@ -41,7 +41,7 @@ const CourseDetail = () => {
           <h1 className="font-bold text-2xl md:text-3xl">
             {course?.courseTitle}
           </h1>
-          <p className="text-base md:text-lg">Course Sub-title</p>
+          <p className="text-base md:text-lg" >{course?.subTitle}</p>
           <p>
             Created By{" "}
             <span className="text-[#C0C4FC] underline italic">
@@ -49,7 +49,7 @@ const CourseDetail = () => {
             </span>
           </p>
           <div className="flex items-center gap-2 text-sm">
-            <BadgeInfo size={16} />
+            <BadgeInfo size={20} />
             <p>Last updated {course?.createdAt.split("T")[0]}</p>
           </div>
           <p>Students enrolled: {course?.enrolledStudents.length}</p>
@@ -59,13 +59,13 @@ const CourseDetail = () => {
         <div className="w-full lg:w-1/2 space-y-5">
           <h1 className="font-bold text-xl md:text-2xl">Description</h1>
           <p
-            className="text-sm"
+            className="text-xl"
             dangerouslySetInnerHTML={{ __html: course.description }}
           />
           <Card>
             <CardHeader>
               <CardTitle>Course Content</CardTitle>
-              <CardDescription>4 lectures</CardDescription>
+              <CardDescription>Total Lecture {course?.lectures.length}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {course.lectures.map((lecture, idx) => (

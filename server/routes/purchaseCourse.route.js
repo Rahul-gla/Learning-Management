@@ -3,6 +3,7 @@ import isAuthenticated from "../middlewares/isAuthenticated.js";
 import {
   createCheckoutSession,
   getAllPurchasedCourse,
+  getAllPurchasedCourses,
   getCourseDetailWithPurchaseStatus,
   stripeWebhook,
 } from "../controllers/coursePurchase.controller.js";
@@ -20,5 +21,7 @@ router.get("/course/:courseId/detail-with-status", isAuthenticated, getCourseDet
 
 // Get all purchased courses for logged-in user
 router.get("/", isAuthenticated, getAllPurchasedCourse);
+// Get all purchased courses for all users
+router.get("/all", isAuthenticated, getAllPurchasedCourses);
 
 export default router;

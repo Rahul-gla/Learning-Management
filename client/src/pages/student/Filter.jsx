@@ -1,4 +1,3 @@
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -9,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import React, { useState } from "react";
 
 const categories = [
@@ -32,51 +30,43 @@ const Filter = ({ handleFilterChange }) => {
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories((prevCategories) => {
-      const newCategories = prevCategories.includes(categoryId)
+      const updated = prevCategories.includes(categoryId)
         ? prevCategories.filter((id) => id !== categoryId)
         : [...prevCategories, categoryId];
 
-        handleFilterChange(newCategories, sortByPrice);
-        return newCategories;
+      handleFilterChange(updated, sortByPrice);
+      return updated;
     });
   };
 
   const selectByPriceHandler = (selectedValue) => {
     setSortByPrice(selectedValue);
     handleFilterChange(selectedCategories, selectedValue);
-  }
+  };
+
   return (
-    <div className="w-full md:w-[20%]">
-      <div className="flex items-center justify-between">
-        <h1 className="font-semibold text-lg md:text-xl">Filter Options</h1>
+    <div className="w-full md:w-[250px] bg-white shadow-md rounded-md p-4 border border-gray-200">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4">Filter Options</h2>
+
+      <div className="mb-6">
+        <Label className="text-sm text-gray-600 mb-2 block">Sort by Price</Label>
         <Select onValueChange={selectByPriceHandler}>
-          <SelectTrigger>
-            <SelectValue placeholder="Sort by" />
+          <SelectTrigger className="w-full border-gray-300 focus:ring-2 focus:ring-blue-500">
+            <SelectValue placeholder="Select..." />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Sort by price</SelectLabel>
+              <SelectLabel>Price</SelectLabel>
               <SelectItem value="low">Low to High</SelectItem>
               <SelectItem value="high">High to Low</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
-      <Separator className="my-4" />
-      <div>
-        <h1 className="font-semibold mb-2">CATEGORY</h1>
-        {categories.map((category) => (
-          <div className="flex items-center space-x-2 my-2">
-            <Checkbox
-              id={category.id}
-              onCheckedChange={() => handleCategoryChange(category.id)}
-            />
-            <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              {category.label}
-            </Label>
-          </div>
-        ))}
-      </div>
+
+      
+
+      
     </div>
   );
 };
