@@ -1,6 +1,6 @@
 import React from "react";
 import Course from "./Course";
-import { useLoadUserQuery } from "@/features/api/authApi";
+// import { useLoadUserQuery } from "@/features/api/authApi";
 import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
 
 const MyLearning = () => {
@@ -34,6 +34,9 @@ const MyLearning = () => {
         
         }
       </div>
+
+
+
     </div>
   );
 };

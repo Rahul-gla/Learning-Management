@@ -5,7 +5,11 @@ import generateToken from "../utils/generateToken.js";
 import { deletMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 export const register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    // const { name, email, password } = req.body;
+
+
+    const { name, email, password, role } = req.body;
+
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -25,11 +29,20 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // await User.create({
+    //   name,
+    //   email,
+    //   password: hashedPassword,
+    // });
+
+
     await User.create({
       name,
       email,
       password: hashedPassword,
+      role: role && ["student", "instructor"].includes(role) ? role : "student",
     });
+    
 
     return res.status(201).json({
       success: true,
@@ -70,7 +83,9 @@ export const login = async (req, res) => {
         message: "Incorrect Email or Password",
       });
     }
-    generateToken(res, user, `Welcome Back ${user.name}`);
+    return generateToken(res, user, `Welcome Back ${user.name}`);
+
+   
  
   } catch (error) {
     console.log(error);
@@ -102,7 +117,20 @@ export const getUserProfile = async (req, res) => {
   try {
     const userId = req.id;
 
-    const user = await User.findById(userId).select("-password").populate("enrolledCourses");
+    // const user = await User.findById(userId).select("-password").populate("enrolledCourses");
+
+
+
+    const user = await User.findById(userId)
+    .select("-password")
+    .populate({
+      path: "enrolledCourses",
+      populate: {
+        path: "creator",
+        model: "User",
+        select: "name photoUrl", // select only what you need
+      },
+    });
     if (!user) {
       return res.status(404).json({
         message: "profile not found",

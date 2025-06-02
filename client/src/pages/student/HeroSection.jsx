@@ -29,8 +29,8 @@ const HeroSection = () => {
             placeholder='Search Courses'
             className='flex-grow border-none focus-visible:right-0 px-5 py-3 text-gray-800 placeholder-gray-500'
           />
-          <Button type="submit" className="bg-blue-600 text-white px-6 py-6 rounded-r-full hover:bg-blue-700">Search</Button>
-        </form>
+<Button type="submit" className="bg-blue-600 text-white px-6 py-6 rounded-r-full hover:bg-blue-800 border-blue-700">Search</Button>
+</form>
         <Button onClick={() => navigate(`/course/search?query`)} className="bg-white text-blue-600 rounded-full hover:bg-gray-200">Explore Courses</Button>
       </div>
     </div>

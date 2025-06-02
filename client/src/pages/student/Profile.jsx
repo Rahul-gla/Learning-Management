@@ -21,12 +21,17 @@ import {
   useUpdateUserMutation,
 } from "@/features/api/authApi";
 import { toast } from "sonner";
+import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
+
 
 const Profile = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState("");
 
-  const { data, isLoading,refetch } = useLoadUserQuery();
+  const { data, isLoading,refetch } = useLoadUserQuery(undefined, {
+    refetchOnMountOrArgChange: true,});
+  // const { data, isLoading,refetch } = useGetPurchasedCoursesQuery();
+
   const [
     updateUser,
     {
@@ -192,7 +197,7 @@ const Profile = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
           {user.enrolledCourses.length === 0 ? (
-            <h1>You Have Not enrooled yet</h1>
+            <h1>You Have Not enrolled yet</h1>
           ) : (
             user.enrolledCourses.map((course) => (
               <Course course={course} key={course._id} />

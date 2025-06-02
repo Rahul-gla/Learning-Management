@@ -368,19 +368,52 @@ export const getAllPurchasedCourse = async (req, res) => {
 
 
 // Get all purchased courses for all users
+// export const getAllPurchasedCourses = async (req, res) => {
+//   try {
+//     const purchasedCourses = await CoursePurchase.find()
+//       .populate("courseId")
+//       .populate("userId"); // Assuming you want to populate user details as well
+
+//     if (!purchasedCourses.length) {
+//       return res.status(404).json({ message: "No purchased courses found." });
+//     }
+
+//     return res.status(200).json({ purchasedCourses });
+//   } catch (error) {
+//     console.log("Error fetching all purchased courses:", error);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
+
+
 export const getAllPurchasedCourses = async (req, res) => {
   try {
-    const purchasedCourses = await CoursePurchase.find()
-      .populate("courseId")
-      .populate("userId"); // Assuming you want to populate user details as well
+    const instructorId = req.id; // Logged-in instructor's ID
 
-    if (!purchasedCourses.length) {
-      return res.status(404).json({ message: "No purchased courses found." });
+    const purchasedCourses = await CoursePurchase.find()
+      .populate({
+        path: "courseId",
+        match: { creator: instructorId }, // ✅ Only include courses created by this instructor
+      })
+      .populate("userId");
+
+    // Remove entries where courseId is null (because match failed)
+    const filteredPurchases = purchasedCourses.filter(
+      (purchase) => purchase.courseId !== null
+    );
+
+    if (!filteredPurchases.length) {
+      return res.status(200).json({ message: "No purchased courses found for this instructor." });
     }
 
-    return res.status(200).json({ purchasedCourses });
+    return res.status(200).json({ purchasedCourses: filteredPurchases });
   } catch (error) {
-    console.log("Error fetching all purchased courses:", error);
+    console.log("Error fetching instructor's purchased courses:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+
+
