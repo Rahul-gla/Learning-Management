@@ -4,7 +4,10 @@ import { userLoggedIn, userLoggedOut } from "../authSlice";
 // import { url } from "inspector";
 // import { use } from "react"
 
-const USER_API = "http://localhost:8080/api/v1/user/";
+// const USER_API = "http://localhost:8080/api/v1/user/";
+
+const USER_API = process.env.REACT_APP_BACKEND_URL + "/api/v1/user/";
+
 
 export const authApi = createApi({
   reducerPath: "authApi",
