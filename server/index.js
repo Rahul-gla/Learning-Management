@@ -18,7 +18,6 @@ connectDB();
 const app = express();
 
 
-import cors from "cors";
 
 const allowedOrigins = [
   "http://localhost:5173",
