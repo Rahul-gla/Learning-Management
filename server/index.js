@@ -28,12 +28,21 @@ app.use((req, res, next) => {
 
 app.use(cookieParser());
 
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
+
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://vocal-faloodeh-b9c5a1.netlify.app",
     credentials: true,
   })
 );
+
 
 const port = process.env.PORT || 8080;
 
