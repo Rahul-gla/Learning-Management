@@ -22,7 +22,9 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://vocal-faloodeh-b9c5a1.netlify.app",
-  "https://helpful-queijadas-ff9d02.netlify.app"
+  "https://helpful-queijadas-ff9d02.netlify.app",
+  "https://loquacious-kheer-6c94cf.netlify.app",
+  
 ];
 
 app.use(
