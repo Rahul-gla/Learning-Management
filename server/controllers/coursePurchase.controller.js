@@ -25,32 +25,64 @@ export const createCheckoutSession = async (req, res) => {
     });
 
     // Create a Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "inr",
-            product_data: {
-              name: course.courseTitle,
-              images: [course.courseThumbnail],
-            },
-            unit_amount: course.coursePrice * 100, // Amount in paise (lowest denomination)
-          },
-          quantity: 1,
+    // const session = await stripe.checkout.sessions.create({
+    //   payment_method_types: ["card"],
+    //   line_items: [
+    //     {
+    //       price_data: {
+    //         currency: "inr",
+    //         product_data: {
+    //           name: course.courseTitle,
+    //           images: [course.courseThumbnail],
+    //         },
+    //         unit_amount: course.coursePrice * 100, // Amount in paise (lowest denomination)
+    //       },
+    //       quantity: 1,
+    //     },
+    //   ],
+    //   mode: "payment",
+    //   success_url: `http://localhost:5173/course-progress/${courseId}`, // Redirect after successful payment
+    //   cancel_url: `http://localhost:5173/course-detail/${courseId}`, // Redirect if payment is canceled
+    //   metadata: {
+    //     courseId: courseId,
+    //     userId: userId,
+    //   },
+    //   shipping_address_collection: {
+    //     allowed_countries: ["IN"], // Optionally restrict allowed countries
+    //   },
+    // });
+
+
+
+    const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ["card"],
+  line_items: [
+    {
+      price_data: {
+        currency: "inr",
+        product_data: {
+          name: course.courseTitle,
+          images: [course.courseThumbnail],
         },
-      ],
-      mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`, // Redirect after successful payment
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`, // Redirect if payment is canceled
-      metadata: {
-        courseId: courseId,
-        userId: userId,
+        unit_amount: course.coursePrice * 100,
       },
-      shipping_address_collection: {
-        allowed_countries: ["IN"], // Optionally restrict allowed countries
-      },
-    });
+      quantity: 1,
+    },
+  ],
+  mode: "payment",
+  success_url: `${CLIENT_URL}/course-progress/${courseId}`,
+  cancel_url: `${CLIENT_URL}/course-detail/${courseId}`,
+  metadata: {
+    courseId: courseId,
+    userId: userId,
+  },
+  shipping_address_collection: {
+    allowed_countries: ["IN"],
+  },
+});
+
 
     if (!session.url) {
       return res.status(400).json({ success: false, message: "Error while creating session" });
