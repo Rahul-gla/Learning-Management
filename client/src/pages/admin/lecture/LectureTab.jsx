@@ -19,10 +19,17 @@ import {
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const MEDIA_API = "http://localhost:8080/api/v1/media";
+// const MEDIA_API = "http://localhost:8080/api/v1/media";
+
+
+const MEDIA_API =
+  window.location.hostname === "localhost"
+    ? "http://localhost:8080/api/v1/media"
+    : "https://learning-management-5.onrender.com/api/v1/media";
+
 
 const LectureTab = () => {
   const [lectureTitle, setLectureTitle] = useState("");
@@ -114,10 +121,14 @@ const LectureTab = () => {
       lectureId,
     });
   };
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || "lecture Update");
+      navigate(`/admin/course/${courseId}`); // Navigate to course page after update
+
     }
 
     if (error) {
@@ -128,8 +139,13 @@ const LectureTab = () => {
   useEffect(() => {
     if (removeIsSuccess) {
       toast.success(removeData.message);
+      navigate(`/admin/course/${courseId}/lecture`); // or wherever you want to navigate after removal
+
     }
   }, [removeIsSuccess]);
+
+
+
   return (
     <Card>
       <CardHeader className="flex justify-between">

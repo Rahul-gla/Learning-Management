@@ -1,4 +1,4 @@
-import { Menu, School } from "lucide-react";
+import { Menu, School, Sidebar } from "lucide-react";
 import React, { useEffect } from "react";
 import {
   DropdownMenu,
@@ -109,6 +109,49 @@ const Navbar = () => {
   );
 };
 
+// const MobileNavbar = ({ user, logoutHandler }) => {
+//   const navigate = useNavigate();
+
+//   return (
+//     <Sheet>
+//       <SheetTrigger asChild>
+//         <Button
+//           size="icon"
+//           className="rounded-full hover:bg-gray-200"
+//           variant="outline"
+//         >
+//           <Menu />
+//         </Button>
+//       </SheetTrigger>
+//       <SheetContent className="flex flex-col">
+//         <SheetHeader className="flex flex-row items-center justify-between mt-2">
+//           <SheetTitle className="font-extrabold text-2xl">
+//             <Link to="/">E-Learning</Link>
+//             {/* <Link to="/" onClick={() => navigate("/")}>E-Learning</Link> */}
+//           </SheetTitle>
+//         </SheetHeader>
+//         <Separator className="mr-2" />
+//         <nav className="flex flex-col space-y-4 ml-4">
+//           <Link to="/my-learning">My Learning</Link>
+//           <Link to="/profile">Edit Profile</Link>
+//           <Link onClick={logoutHandler}>Log Out</Link>
+//         </nav>
+//         {user?.role === "instructor" && (
+//           <SheetFooter>
+//             <SheetClose asChild>
+//               <Button type="submit" onClick={() => navigate("/admin/dashboard")}>
+//                 Dashboard
+//               </Button>
+//             </SheetClose>
+//           </SheetFooter>
+//         )}
+//       </SheetContent>
+//     </Sheet>
+//   );
+// };
+
+
+
 const MobileNavbar = ({ user, logoutHandler }) => {
   const navigate = useNavigate();
 
@@ -127,27 +170,70 @@ const MobileNavbar = ({ user, logoutHandler }) => {
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
           <SheetTitle className="font-extrabold text-2xl">
             <Link to="/">E-Learning</Link>
-            {/* <Link to="/" onClick={() => navigate("/")}>E-Learning</Link> */}
           </SheetTitle>
         </SheetHeader>
         <Separator className="mr-2" />
-        <nav className="flex flex-col space-y-4 ml-4">
-          <Link to="/my-learning">My Learning</Link>
-          <Link to="/profile">Edit Profile</Link>
-          <Link onClick={logoutHandler}>Log Out</Link>
-        </nav>
-        {user?.role === "instructor" && (
-          <SheetFooter>
+
+        {user ? (
+          <>
+            {/* Logged-in user */}
+            <nav className="flex flex-col space-y-4 ml-4">
+
+
             <SheetClose asChild>
-              <Button type="submit" onClick={() => navigate("/admin/dashboard")}>
-                Dashboard
+
+              <Link to="/my-learning">My Learning</Link>
+              </SheetClose>
+
+              <SheetClose asChild>
+
+              <Link to="/profile">Edit Profile</Link>
+              </SheetClose>
+
+              <SheetClose asChild>
+
+              <Link onClick={logoutHandler}>Log Out</Link>
+              </SheetClose>
+            </nav>
+
+            {user?.role === "instructor" && (
+              <SheetFooter>
+                <SheetClose asChild>
+                  <Button type="submit" onClick={() => navigate("/admin/dashboard")}>
+                    Dashboard
+                  </Button>
+                </SheetClose>
+              </SheetFooter>
+            )}
+          </>
+        ) : (
+          <>
+            {/* Guest user */}
+            <nav className="flex flex-col space-y-4 ml-4">
+            <SheetClose asChild>
+
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Login
               </Button>
-            </SheetClose>
-          </SheetFooter>
+
+              </SheetClose>
+              <SheetClose asChild>
+              <Button onClick={() => navigate("/login")}>Signup</Button>
+              </SheetClose>
+            </nav>
+          </>
         )}
       </SheetContent>
     </Sheet>
   );
 };
+
+
+
+
+
+
+
+
 
 export default Navbar;
