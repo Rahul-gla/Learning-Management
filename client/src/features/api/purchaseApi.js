@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // https://learning-management-2.onrender.com/
 
 
-const COURSE_PURCHASE_API = "https://learning-management-4.onrender.com/api/v1/purchase";
+const COURSE_PURCHASE_API = "https://learning-management-5.onrender.com/api/v1/purchase";
 
 
 // const COURSE_PURCHASE_API = process.env.REACT_APP_BACKEND_URL +"/api/v1/purchase";

@@ -6,7 +6,9 @@ import { userLoggedIn, userLoggedOut } from "../authSlice";
 
 // const USER_API = "http://localhost:8080/api/v1/user/";
 
-const USER_API = "https://learning-management-4.onrender.com/api/v1/user/";
+// https://learning-management-5.onrender.com/
+
+const USER_API = "https://learning-management-5.onrender.com/api/v1/user/";
 
 
 export const authApi = createApi({

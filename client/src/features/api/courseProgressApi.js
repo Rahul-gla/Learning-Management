@@ -6,7 +6,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // process.env.REACT_APP_BACKEND_URL +
 
-const COURSE_PROGRESS_API = "https://learning-management-4.onrender.com/api/v1/progress";
+const COURSE_PROGRESS_API = "https://learning-management-5.onrender.com/api/v1/progress";
 
 
 export const courseProgressApi = createApi({
