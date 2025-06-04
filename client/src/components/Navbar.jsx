@@ -169,7 +169,12 @@ const MobileNavbar = ({ user, logoutHandler }) => {
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
           <SheetTitle className="font-extrabold text-2xl">
+
+            <SheetClose asChild>
+
             <Link to="/">E-Learning</Link>
+
+            </SheetClose>
           </SheetTitle>
         </SheetHeader>
         <Separator className="mr-2" />

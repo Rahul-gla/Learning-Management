@@ -127,7 +127,7 @@ const LectureTab = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || "lecture Update");
-      navigate(`/admin/course/${courseId}`); // Navigate to course page after update
+      navigate(`/admin/course/${courseId}/lecture`); // Navigate to course page after update
 
     }
 
